@@ -1,23 +1,26 @@
 package com.github.yoruhinda.springsecurityguide.core.controllers;
 
+import com.github.yoruhinda.springsecurityguide.core.domain.dto.UserDto;
 import com.github.yoruhinda.springsecurityguide.core.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("/auth")
 public class SecurityController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public ResponseEntity login(String username, String password){
+    @PostMapping("/login")
+    public ResponseEntity<String> login(UserDto userDto){
         return null;
     }
 
-    @PostMapping
-    public ResponseEntity register(String username, String password){
+    @PostMapping("/register")
+    public ResponseEntity<String> register(UserDto userDto){
+        if(userService.loadUserByUsername(userDto.username()) != null);
         return null;
     }
 }
