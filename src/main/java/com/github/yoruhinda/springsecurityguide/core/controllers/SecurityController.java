@@ -3,6 +3,7 @@ package com.github.yoruhinda.springsecurityguide.core.controllers;
 import com.github.yoruhinda.springsecurityguide.core.domain.dto.UserDto;
 import com.github.yoruhinda.springsecurityguide.core.domain.entity.User;
 import com.github.yoruhinda.springsecurityguide.core.exceptions.InvalidUserException;
+import com.github.yoruhinda.springsecurityguide.core.security.JwtGenerator;
 import com.github.yoruhinda.springsecurityguide.core.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,15 @@ public class SecurityController {
     private UserService userService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtGenerator jwtGenerator;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDto userDto){
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.username(), userDto.password()));
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-        return ResponseEntity.ok("User: " + SecurityContextHolder.getContext().getAuthentication() + " Authenticated!");
+        User user = (User) authenticate.getPrincipal();
+        String token = jwtGenerator.generateToken(user);
+        return ResponseEntity.ok("User: " + SecurityContextHolder.getContext().getAuthentication() + " Authenticated! Token: " + token);
     }
 
     @PostMapping("/register")

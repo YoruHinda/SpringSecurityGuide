@@ -1,5 +1,8 @@
 package com.github.yoruhinda.springsecurityguide.core.config;
 
+import com.github.yoruhinda.springsecurityguide.core.security.JwtGenerator;
+import com.github.yoruhinda.springsecurityguide.core.security.SecurityJwtFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -14,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -25,7 +29,10 @@ public class SecurityConfig {
                 authorize.requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/auth/register").permitAll()
                         .requestMatchers("/auth/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()).httpBasic(Customizer.withDefaults()).sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(securityJwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 
@@ -39,4 +46,13 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
+    public JwtGenerator jwtGenerator(){
+        return new JwtGenerator();
+    }
+
+    @Bean
+    public SecurityJwtFilter securityJwtFilter(){
+        return new SecurityJwtFilter();
+    }
 }
