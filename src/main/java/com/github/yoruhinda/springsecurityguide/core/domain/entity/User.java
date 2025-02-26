@@ -18,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "User")
 public class User implements UserDetails {
+    //User entity in database implements userDetails of SpringSecurity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +32,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    // Convert UserRoleEnumerated in SimpleGrantedAuthorization for spring security recognize
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(this.userRole == UserRoleEnumerated.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("auth")
 public class SecurityController {
+    //Dependency Injection!
     @Autowired
     private UserService userService;
     @Autowired
@@ -23,6 +24,7 @@ public class SecurityController {
     @Autowired
     private JwtGenerator jwtGenerator;
 
+    // /auth/login endpoint authenticate user of request body return jwt token!
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDto userDto){
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.username(), userDto.password()));
@@ -31,12 +33,14 @@ public class SecurityController {
         return ResponseEntity.ok("User: " + SecurityContextHolder.getContext().getAuthentication() + " Authenticated! Token: " + token);
     }
 
+    // /auth/register endpoint save user in database
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDto userDto){
         User user = userService.registerUserInDatabase(userDto);
         return ResponseEntity.ok("User Created >> " + user);
     }
 
+    // /auth/admin/ endpoint delete user in database for admin test!
     @DeleteMapping("/admin/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") long id){
         User user = userService.deleteUser(id);

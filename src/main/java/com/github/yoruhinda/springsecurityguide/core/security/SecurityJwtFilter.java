@@ -21,6 +21,7 @@ public class SecurityJwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtGenerator jwtGenerator;
 
+    // filter request and authenticate user by jwt token
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = this.recoverToken(request);
@@ -33,6 +34,7 @@ public class SecurityJwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    // Get token by header
     private String recoverToken(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
         if (authorization == null) return null;

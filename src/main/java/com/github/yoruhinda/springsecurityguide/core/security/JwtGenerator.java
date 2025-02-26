@@ -14,6 +14,7 @@ import java.time.ZoneOffset;
 @Component
 public class JwtGenerator {
 
+    // Generate Token By User and link username in token
     public String generateToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SecurityConstants.privateKey);
@@ -27,6 +28,7 @@ public class JwtGenerator {
         }
     }
 
+    // validate token and return username this token
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SecurityConstants.privateKey);
@@ -39,6 +41,7 @@ public class JwtGenerator {
         }
     }
 
+    // generate jwt token expiration date
     private Instant generateExpirationDate() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }

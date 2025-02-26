@@ -24,6 +24,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    // register user in database verify if already exist
     public User registerUserInDatabase(UserDto userDto) {
         if (loadUserByUsername(userDto.username()) != null) throw new InvalidUserException("User Already exist");
         User user = new User(userDto.username(), passwordEncoder.encode(userDto.password()));
@@ -32,6 +33,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    // delete user in database!
     public User deleteUser(long id) {
         User user = userRepository.findById(id).orElseThrow();
         userRepository.delete(user);

@@ -22,7 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    //SecurityConfig spring configuration CLASS
 
+    //filter chain, filter routes by roles and manager request add custom jwt filter
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests((authorize) ->
@@ -36,21 +38,25 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Dependency injection in password encoder
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    // Dependency injection in authentication manager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    // Dependency injection in JWTGenerator class
     @Bean
     public JwtGenerator jwtGenerator(){
         return new JwtGenerator();
     }
 
+    // Dependency injection in securityJwtFilter class
     @Bean
     public SecurityJwtFilter securityJwtFilter(){
         return new SecurityJwtFilter();
